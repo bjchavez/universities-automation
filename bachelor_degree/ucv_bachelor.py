@@ -3,42 +3,55 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def get_page():
-    req = requests.get("https://repositorio.ucv.edu.pe/handle/20.500.12692/4", verify=False)
-    try:
-        if req.status_code == 200:
-            page = BeautifulSoup(req.text, "html.parser")
-            return page
-    except requests.exceptions.HTTPError as error:
-        print(f"An ocurred error: {error}")
+class Ucv:
+    def __init__(self, url):
+        self.url = url
 
+    def get_url(self):
+        return self.url
 
-def get_faculties(page):
-    faculties = page.find_all("span", class_="Z3988", limit=4)
-    faculties_list = [faculty.string for faculty in faculties]
-    return faculties_list
+    def get_response(self):
+        req = requests.get(self.url, verify=False)
+        return req
 
+    def get_page(self, response):
+        try:
+            if response.status_code == 200:
+                page = BeautifulSoup(response.text, "html.parser")
+                return page
+        except requests.exceptions.HTTPError as error:
+            print(f"An ocurred error: {error}")
 
-def get_thesis_count(page):
-    thesis = page.find_all("h4", class_="artifact-title", limit=4)
-    thesis_string = [t.contents[2].string for t in thesis]
+    def get_faculties(self, page):
+        faculties = page.find_all("span", class_="Z3988", limit=4)
+        faculties_list = [faculty.string for faculty in faculties]
+        return faculties_list
 
-    thesis_list = []
+    def get_thesis_positions(self, page):
+        thesis = page.find_all("h4", class_="artifact-title", limit=4)
+        thesis_string = [t.contents[2].string for t in thesis]
+        return thesis_string
 
-    for thesis in thesis_string:
-        remove_spaces = thesis.lstrip()
-        remove_brackets = remove_spaces.translate({ord("["): None, ord("]"): None})
-        convert_to_int = int(remove_brackets)
-        thesis_list.append(convert_to_int)
+    def get_thesis_count(self, positions):
+        thesis_count_list = []
 
-    return thesis_list
+        for position in positions:
+            remove_spaces = position.lstrip()
+            remove_brackets = remove_spaces.translate({ord("["): None, ord("]"): None})
+            convert_to_int = int(remove_brackets)
+            thesis_count_list.append(convert_to_int)
+        return thesis_count_list
 
 
 def get_ucv():
     module = import_module("bachelor_degree.utils.thesis")
 
     print("Getting data from UCV...")
-    faculties = get_faculties(get_page())
-    thesis = get_thesis_count(get_page())
+    ucv = Ucv("https://repositorio.ucv.edu.pe/handle/20.500.12692/4")
+    page = ucv.get_page(ucv.get_response())
+    faculties_list = ucv.get_faculties(page)
 
-    module.write_csv(faculties, thesis, "UCV_BACHELOR.csv")
+    thesis_position = ucv.get_thesis_positions(page)
+    thesis_count = ucv.get_thesis_count(thesis_position)
+
+    module.write_csv(faculties_list, thesis_count, "UCV_BACHELOR.csv")
