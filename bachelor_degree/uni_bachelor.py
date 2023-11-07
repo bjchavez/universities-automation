@@ -1,68 +1,100 @@
 from bs4 import BeautifulSoup
-from collections import deque
 from importlib import import_module
 import requests
-import itertools
 
 
-def get_faculties_page():
-    req = requests.get("https://cybertesis.uni.edu.pe/handle/20.500.14076/1", verify=False)
-    try:
-        if req.status_code == 200:
-            page = BeautifulSoup(req.text, "xml")
-            return page
-    except requests.exceptions.HTTPError as error:
-        print(f"An ocurred error: {error}")
+class UniFaculties:
+    def __init__(self, faculties_url):
+        self.faculties_url = faculties_url
 
+    def get_faculties_url(self):
+        return self.faculties_url
 
-def get_faculties(page):
-    faculties = page.find_all("h4", class_="list-group-item-heading", limit=11)
-    faculties_content = [f.contents[0].string for f in faculties]
-    faculties_list = [f.strip() for f in faculties_content]
-    return faculties_list
+    def get_faculties_response(self):
+        faculties_req = requests.get(self.faculties_url, verify=False)
+        return faculties_req
 
-
-def get_thesis_count_pages():
-    thesis_ids = [2, 56, 17, 12, 36, 23, 29, 49, 43, 79, 87]
-    thesis_count_pages = []
-
-    for id in thesis_ids:
-        req = requests.get(f"https://cybertesis.uni.edu.pe/handle/20.500.14076/{id}", verify=False)
+    def get_faculties_page(self, response):
         try:
-            if req.status_code == 200:
-                thesis_page = BeautifulSoup(req.text, "xml")
-                thesis_count_pages.append(thesis_page)
+            if response.status_code == 200:
+                page = BeautifulSoup(response.text, "xml")
+                return page
         except requests.exceptions.HTTPError as error:
             print(f"An ocurred error: {error}")
 
-    return thesis_count_pages
+    def get_faculties(self, page):
+        faculties = page.find_all("h4", class_="list-group-item-heading", limit=11)
+        faculties_content = [f.contents[0].string for f in faculties]
+        faculties_list = [f.strip() for f in faculties_content]
+        return faculties_list
 
 
-def get_thesis_count(pages):
-    thesis_count_list = []
+class UniThesis:
+    def __init__(self, thesis_url):
+        self.thesis_url = thesis_url
+        self.thesis_ids = [2, 56, 17, 12, 36, 23, 29, 49, 43, 79, 87]
 
-    for page in pages:
-        thesis_find = page.find_all("h4", class_="list-group-item-heading")
-        thesis_content = [thesis.contents[1] for thesis in thesis_find]
-        thesis_recovered = []
+    def get_thesis_url(self):
+        return self.thesis_url
 
-        for thesis in thesis_content:
-            remove_spaces = thesis.strip()
-            remove_brackets = remove_spaces.translate({ord("["): None, ord("]"): None})
-            convert_to_int = int(remove_brackets)
-            thesis_recovered.append(convert_to_int)
+    def get_thesis_ids(self):
+        return self.thesis_ids
 
-        thesis_sum = deque(itertools.islice(thesis_recovered, 1, 10))
-        thesis_count_list.append(sum(thesis_sum))
+    def get_thesis_response(self):
+        thesis_response = []
 
-    return thesis_count_list
+        for thesis in self.thesis_ids:
+            thesis_req = requests.get(f"{self.thesis_url}/{thesis}", verify=False)
+            thesis_response.append(thesis_req)
+        return thesis_response
+
+    def get_thesis_page(self, responses):
+        thesis_pages = []
+
+        for response in responses:
+            try:
+                if response.status_code == 200:
+                    page = BeautifulSoup(response.text, "xml")
+                    thesis_pages.append(page)
+            except requests.exceptions.HTTPError as error:
+                print(f"An ocurred error: {error}")
+        return thesis_pages
+
+    def get_thesis_position(self, pages):
+        thesis_positions = []
+
+        for page in pages:
+            thesis_find = page.find_all("h4", class_="list-group-item-heading")
+            thesis_content = [thesis.contents[1] for thesis in thesis_find]
+            thesis_positions.append(thesis_content[1:])
+        return thesis_positions
+
+    def get_thesis_count(self, positions):
+        thesis_count_list = []
+
+        for position_list in positions:
+            recovered_count = []
+
+            for position in position_list:
+                remove_spaces = position.strip()
+                remove_brackets = remove_spaces.translate({ord("["): None, ord("]"): None})
+                convert_to_int = int(remove_brackets)
+                recovered_count.append(convert_to_int)
+            thesis_count_list.append(sum(recovered_count))
+        return thesis_count_list
 
 
 def get_uni():
     module = import_module("bachelor_degree.utils.thesis")
 
     print("Getting data from UNI...")
-    faculties = get_faculties(get_faculties_page())
-    thesis = get_thesis_count(get_thesis_count_pages())
+    faculties_url = UniFaculties("https://cybertesis.uni.edu.pe/handle/20.500.14076/1")
+    faculties_page = faculties_url.get_faculties_page(faculties_url.get_faculties_response())
+    faculties_list = faculties_url.get_faculties(faculties_page)
 
-    module.write_csv(faculties, thesis, "UNI_BACHELOR.csv")
+    thesis_url = UniThesis("https://cybertesis.uni.edu.pe/handle/20.500.14076")
+    thesis_pages = thesis_url.get_thesis_page(thesis_url.get_thesis_response())
+    thesis_positions = thesis_url.get_thesis_position(thesis_pages)
+    thesis_count = thesis_url.get_thesis_count(thesis_positions)
+
+    module.write_csv(faculties_list, thesis_count, "UNI_BACHELOR.csv")
