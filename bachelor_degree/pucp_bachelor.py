@@ -91,7 +91,7 @@ def get_pucp():
     faculties_pages = faculties_url.get_faculties_page(faculties_url.get_faculties_response())
     faculties_list = faculties_url.get_faculties(faculties_pages)
 
-    thesis_url = PucpThesis("https://repositorio.pucp.edu.pe/index/handle/123456789/")
+    thesis_url = PucpThesis("https://repositorio.pucp.edu.pe/index/handle/123456789")
     thesis_pages = thesis_url.get_thesis_page(thesis_url.get_thesis_response())
     thesis_positions = thesis_url.get_thesis_position(thesis_pages)
     thesis_count = thesis_url.get_thesis_count(thesis_positions)
