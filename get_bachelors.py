@@ -8,7 +8,6 @@ if __name__ == "__main__":
     bachelor_degree.get_ucs()
     bachelor_degree.get_ucv()
     bachelor_degree.get_unalm()
-    # bachelor_degree.get_uncp()
     bachelor_degree.get_uni()
     bachelor_degree.get_unjfsc()
     bachelor_degree.get_unmsm()
