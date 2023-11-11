@@ -6,7 +6,7 @@ import requests
 
 class PucpFaculties:
     """
-    This class provides only the methods to get faculties data.
+    This class provides only the methods to get faculties data from PUCP.
     """
     def __init__(self, faculties_url):
         """
@@ -69,13 +69,14 @@ class PucpFaculties:
 
 class PucpThesis:
     """
-    This class provides only the methods to get theses data.
+    This class provides only the methods to get theses data from PUCP.
     """
     def __init__(self, thesis_url):
         """
+        This method initialize a identifiers list of each theses page.
+
         Args:
             thesis_url[string]: Theses page URL.
-            thesis_ids[list]: Identifiers list of each thesis page.
         """
         self.thesis_url = thesis_url
         self.thesis_ids = [9117, 170514, 9118, 129392, 135248, 9119, 9120, 9121, 9122, 9123, 9124, 9125, 129361]
