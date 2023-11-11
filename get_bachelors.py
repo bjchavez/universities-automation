@@ -1,3 +1,6 @@
+"""
+This module execute the methods for scraping and writing data from the universities into csv file.
+"""
 import bachelor_degree
 import urllib3
 
