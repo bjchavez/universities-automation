@@ -5,10 +5,21 @@ import requests
 
 
 class UnalmFaculties:
+    """
+    This class provides only the methods to get faculties data from UNALM.
+    """
     def __init__(self, faculties_url):
+        """
+        Args:
+            faculties_url[string]: Faculties page URL.
+        """
         self.faculties_url = faculties_url
 
     def get_faculties_url(self):
+        """
+        Returns:
+            The URL of the faculties.
+        """
         return self.faculties_url
 
     def get_faculties_response(self):
@@ -16,6 +27,15 @@ class UnalmFaculties:
         return faculties_req
 
     def get_faculties_page(self, response):
+        """
+        This method make a http request at faculties URL.
+
+        Returns:
+            A Http response code.
+
+        Raises:
+            HTTPErrors: If the status code is not 200, the method returns an HTTP error and halts the program.
+        """
         try:
             if response.status_code == 200:
                 page = BeautifulSoup(response.text, "html.parser")
@@ -24,13 +44,31 @@ class UnalmFaculties:
             print(f"An ocurred error: {error}")
 
     def get_faculties(self, page):
+        """
+        This method find all 'a' HTML element, with a limit of 8.
+
+        Args:
+            page[beautofulsoup]: Beautifulsoup parsed page.
+
+        Return:
+            A list with the names of faculties.
+        """
         faculties = page.find_all("a", attrs={"name": "community-browser-link"}, limit=8)
         faculties_list = [faculty.string for faculty in faculties]
         return faculties_list
 
 
 class UnalmThesis:
+    """
+    This class provides only the methods to get theses data from UNALM.
+    """
     def __init__(self, thesis_url):
+        """
+        This method initializes a list of lists for each thesis page.
+
+        Args:
+            thesis_url[string]: Theses page URL.
+        """
         self.thesis_url = thesis_url
         self.thesis_ids = [[12, 13, 14, 15, 16],
                            [17, 18, 19, 20],
@@ -42,9 +80,19 @@ class UnalmThesis:
                            [192, 34]]
 
     def get_thesis_url(self):
+        """
+        Returns:
+            The URL of the theses.
+        """
         return self.thesis_url
 
     def get_thesis_response(self):
+        """
+        This method make http requests at thesis URL.
+
+        Returns:
+            A deque of http response codes.
+        """
         thesis_responses = deque()
 
         for i in range(len(self.thesis_ids)):
@@ -58,6 +106,18 @@ class UnalmThesis:
         return thesis_responses
 
     def get_thesis_page(self, responses):
+        """
+        This method loops through the deque of HTTP responses and verifies if their status code is 200.
+
+        Args:
+            responses[deque]: Http response codes for each theses page.
+
+        Returns:
+            A deque of BeautifulSoup parsed objects.
+
+        Raises:
+            HTTPErrors: If the status code is not 200, the method returns an HTTP error and halts the program.
+        """
         thesis_pages = deque()
 
         for i in range(len(responses)):
@@ -75,6 +135,15 @@ class UnalmThesis:
         return thesis_pages
 
     def get_thesis_position(self, pages):
+        """
+        This method find all 'h4' HTML elements and select the last.
+
+        Args:
+            pages[beautifulsoup]: Beautifulsoup parsed pages.
+
+        Returns:
+            A deque of strigns with positions of the theses.
+        """
         thesis_positions = deque()
 
         for i in range(len(pages)):
@@ -89,6 +158,16 @@ class UnalmThesis:
         return thesis_positions
 
     def get_thesis_count(self, positions):
+        """
+        This method loops through the positions parameter and verifies, remove all blank spaces and brackets, and convert it to
+        integer. Finally, that value is added to a new list.
+
+        Args:
+            positions[deque]: Position strings of the theses.
+
+        Returns:
+            An integers list with the numbers of each the thesis.
+        """
         thesis_count = deque()
 
         for i in range(len(positions)):
@@ -107,6 +186,9 @@ class UnalmThesis:
 
 
 def get_unalm():
+    """
+    This method is used to initialize the UNALM class objects and write the CSV file.
+    """
     module = import_module("bachelor_degree.utils.thesis")
 
     print("Getting data from UNALM...")
