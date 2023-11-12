@@ -34,10 +34,10 @@ class PucpFaculties:
 
     def get_faculties_page(self, response):
         """
-        This method verify if the status code is 200.
+        This method verify if the status code at response is 200.
 
         Args:
-            response[http]: Http response code of the faculties page
+            response[http]: Http response code of the faculties page.
 
         Returns:
             Beautifulsoup parsed object.
