@@ -54,13 +54,13 @@ class PucpFaculties:
 
     def get_faculties(self, page):
         """
-        This method finds a span HTML element on the specified page, with a limit of 13.
+        This method find all 'span' HTML elements and convert them to strings.
 
         Args:
             page[beautifulsoup]: Beautifulsoup parsed object.
 
         Returns:
-            A list of strings, each with a faculty name.
+            A list of strings with the faculties names.
         """
         faculties = page.find_all("span", class_="Z3988", limit=13)
         faculties_list = [faculty.string for faculty in faculties]
@@ -73,7 +73,7 @@ class PucpThesis:
     """
     def __init__(self, thesis_url):
         """
-        This method initialize a identifiers list of each theses page.
+        This method initialize a identifiers list for each theses page.
 
         Args:
             thesis_url[string]: Theses page URL.
@@ -134,7 +134,7 @@ class PucpThesis:
 
     def get_thesis_position(self, pages):
         """
-        This method find all paragraph HTML elements, convert them to integer and select the last.
+        This method find all paragraph HTML elements, convert them to strings and select the zero position.
 
         Args:
             pages[deque]: BeautifulSoup parsed pages.
@@ -160,7 +160,7 @@ class PucpThesis:
             positions[deque]: Paragraph HTML elements.
 
         Returns:
-            A deque of numbers.
+            A deque with the numbers of the theses.
         """
         thesis_count_list = deque()
 
@@ -170,7 +170,7 @@ class PucpThesis:
             for option in options:
                 if option in position:
                     thesis_count = position.replace(option, "")
-                    thesis_count_list.append(thesis_count)
+                    thesis_count_list.append(int(thesis_count))
         return thesis_count_list
 
 
