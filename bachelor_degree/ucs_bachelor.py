@@ -50,22 +50,21 @@ class Ucs:
 
     def get_faculties(self, page):
         """
-        This method find all 'span' HTML elements, convert them to strings and locate the last.
+        This method find all 'span' HTML elements, convert them to strings and locate the position between 0 and 5.
 
         Args:
             page[beautifulsoup]: Beautifulsoup parsed page.
 
         Returns:
-            A list of strings.
+            A list of strings with the faculties names.
         """
         faculties = page.find_all("span", class_="Z3988")
         faculties_string = [faculty.string for faculty in faculties]
-        faculties_list = faculties_string[0:5]
-        return faculties_list
+        return faculties_string[0:5]
 
     def get_thesis_positions(self, page):
         """
-        This method find all 'h4' HTML elements, locate the lasts and convert them to strings.
+        This method find all 'h4' HTML elements, convert them to strings and locate the second position.
 
         Args:
             page[beautifulsoup]: Beautifulsoup parsed page.
@@ -82,7 +81,7 @@ class Ucs:
         This method loops over the positions, removes all blank spaces and brackets, and converts them to integers.
 
         Args:
-            positions[list]: List of strings.
+            positions[list]: Positions of the theses.
 
         Returns:
             A list of integers with the numbers of each thesis.
