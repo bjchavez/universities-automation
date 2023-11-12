@@ -157,7 +157,7 @@ class PucpThesis:
         If it is true, it removes the item; otherwise, it breaks.
 
         Args:
-            positions[deque]:
+            positions[deque]: Paragraph HTML elements.
 
         Returns:
             A deque of numbers.
