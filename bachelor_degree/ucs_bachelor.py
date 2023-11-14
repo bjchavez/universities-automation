@@ -40,6 +40,9 @@ class Ucs:
 
         Returns:
             A BeautifulSoup parsed page.
+
+        Raises:
+            HTTPErrors: If the status code is not 200, the method returns an HTTP error and halts the program.
         """
         try:
             if response.status_code == 200:
