@@ -6,17 +6,46 @@ import re
 
 
 class Unsaac:
+    """
+    This class provides the methods to get faculties and theses data from UCV.
+    """
     def __init__(self, url):
+        """
+        Args:
+            url[string]: University URL.
+        """
         self.url = url
 
     def get_url(self):
+        """
+        Returns:
+            The URL of the university.
+        """
         return self.url
 
     def get_response(self):
+        """
+        This method make http request at university URL.
+
+        Returns:
+            One http response code
+        """
         req = requests.get(self.url, verify=False)
         return req
 
     def get_page(self, response):
+        """
+        This method verfify if the status code of the parameter response is 200.
+
+        Args:
+            response[http]: Http response code.
+
+        Returns:
+            A BeautifulSoup parsed page.
+
+        Raises:
+            HTTPErrors: If the status code is not 200, the method returns an HTTP error and halts the program.
+        """
         try:
             if response.status_code == 200:
                 page = BeautifulSoup(response.text, "html.parser")
@@ -25,16 +54,44 @@ class Unsaac:
             print(f"An ocurred error: {error}")
 
     def get_faculties(self, page):
+        """
+        This method find all 'a' HTML elements and convert them to strings.
+
+        Args:
+            page[beautifulsoup]: Beautifulsoup parsed page.
+
+        Returns:
+            A list of strings with the faculties names.
+        """
+
         faculties = page.find_all("a", attrs={"name": "community-browser-link"})
         faculties_string = [faculty.string for faculty in faculties]
         return faculties_string[3:13]
 
     def get_thesis_position(self, page):
+        """
+        This method find all classes 'mode' using the re library from python.
+
+        Args:
+            page[beautifulsoup]: Beautifulsoup parsed page.
+
+        Returns:
+            A list with the positions of the theses.
+        """
         thesis = page.find_all(class_=re.compile("mode"))
         thesis_content = [t.contents[2].string for t in thesis]
         return thesis_content[3:13]
 
     def get_thesis_count(self, positions):
+        """
+        This method loops over the positions, removes all blank spaces and brackets, and converts them to integers.
+
+        Args:
+            positions[list]: List of strings with the positions of the theses.
+
+        Returns:
+            A list of integers with the numbers of each thesis.
+        """
         thesis_count_list = []
 
         for position in positions:
@@ -46,6 +103,9 @@ class Unsaac:
 
 
 def get_unsaac():
+    """
+    This method is used to initialize the UNSAAC class objects and write the CSV file.
+    """
     module = import_module("bachelor_degree.utils.thesis")
 
     print("Getting data from UNSAAC...")
@@ -57,36 +117,3 @@ def get_unsaac():
     thesis_count = unsaac.get_thesis_count(thesis_position)
 
     module.write_csv(faculties_list, thesis_count, "UNSAAC_BACHELOR.csv")
-
-
-# def get_page():
-#     req = requests.get("https://repositorio.unsaac.edu.pe/", verify=False)
-#     try:
-#         if req.status_code == 200:
-#             page = BeautifulSoup(req.text, "html.parser")
-#             return page
-#     except requests.exceptions.HTTPError as error:
-#         print(f"An ocurred error: {error}")
-#
-# def get_thesis_count(page):
-#     thesis = page.find_all(class_=re.compile("mode"))
-#     thesis_content = [t.contents[2].string for t in thesis]
-#
-#     thesis_list = deque()
-#     for t in thesis_content[3:13]:
-#         remove_spaces = t.strip()
-#         remove_brackets = remove_spaces.translate({ord("["): None, ord("]"): None})
-#         convert_to_int = int(remove_brackets)
-#         thesis_list.append(convert_to_int)
-#
-#     return thesis_list
-#
-#
-# def get_unsaac():
-#     module = import_module("bachelor_degree.utils.thesis")
-#
-#     print("Getting data from UNSAAC...")
-#     faculties = get_faculties(get_page())
-#     thesis = get_thesis_count(get_page())
-#
-#     module.write_csv(faculties, thesis, "UNSAAC_BACHELOR.csv")
