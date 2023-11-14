@@ -166,7 +166,7 @@ class UnalmThesis:
             positions[deque]: Position strings of the theses.
 
         Returns:
-            An integers list with the numbers of each the thesis.
+            An list of integeres with the numbers of each the thesis.
         """
         thesis_count = deque()
 
