@@ -177,7 +177,7 @@ class UniThesis:
 
 def get_uni():
     """
-    This method is used to initialize the PUCP class objects and write the UNI file.
+    This method is used to initialize the UNI class objects and write the CSV file.
     """
     module = import_module("bachelor_degree.utils.thesis")
 
