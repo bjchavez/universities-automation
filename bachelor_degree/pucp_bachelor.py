@@ -8,14 +8,14 @@ class PucpFaculties:
     """
     This class provides only the methods to get faculties data from PUCP.
     """
-    def __init__(self, faculties_url):
+    def __init__(self, faculties_url) -> None:
         """
         Args:
             faculties_url[string]: Faculties page URL.
         """
         self.faculties_url = faculties_url
 
-    def get_faculties_url(self):
+    def get_faculties_url(self) -> str:
         """
         Returns:
             The URL of the faculties.
@@ -32,7 +32,7 @@ class PucpFaculties:
         faculties_req = requests.get(self.faculties_url, verify=False)
         return faculties_req
 
-    def get_faculties_page(self, response):
+    def get_faculties_page(self, response) -> BeautifulSoup:
         """
         This method verify if the status code at response is 200.
 
@@ -45,14 +45,13 @@ class PucpFaculties:
         Raises:
             HTTPErrors: If the status code is not 200, the method returns an HTTP error and halts the program.
         """
-        try:
-            if response.status_code == 200:
-                page = BeautifulSoup(response.text, "html.parser")
-                return page
-        except requests.exceptions.HTTPError as error:
-            print(f"An ocurred error: {error}")
+        if response.status_code == 200:
+            page = BeautifulSoup(response.text, "html.parser")
+            return page
+        else:
+            raise requests.exceptions.HTTPError
 
-    def get_faculties(self, page):
+    def get_faculties(self, page) -> list[str]:
         """
         This method find all 'span' HTML elements and convert them to strings.
 
@@ -71,7 +70,7 @@ class PucpThesis:
     """
     This class provides only the methods to get theses data from PUCP.
     """
-    def __init__(self, thesis_url):
+    def __init__(self, thesis_url) -> None:
         """
         This method initialize a identifiers list for each theses page.
 
@@ -81,21 +80,21 @@ class PucpThesis:
         self.thesis_url = thesis_url
         self.thesis_ids = [9117, 170514, 9118, 129392, 135248, 9119, 9120, 9121, 9122, 9123, 9124, 9125, 129361]
 
-    def get_thesis_url(self):
+    def get_thesis_url(self) -> str:
         """
         Returns:
             The URL of the theses.
         """
         return self.thesis_url
 
-    def get_thesis_ids(self):
+    def get_thesis_ids(self) -> list[int]:
         """
         Returns:
             The list of IDs for the theses.
         """
         return self.thesis_ids
 
-    def get_thesis_response(self):
+    def get_thesis_response(self) -> deque:
         """
         This method make http requests at thesis URL.
 
@@ -108,7 +107,7 @@ class PucpThesis:
             thesis_response.append(thesis_req)
         return thesis_response
 
-    def get_thesis_page(self, responses):
+    def get_thesis_page(self, responses) -> deque[BeautifulSoup]:
         """
         This method loops through the deque of HTTP responses and verifies if their status code is 200.
 
@@ -132,7 +131,7 @@ class PucpThesis:
                 print(f"An ocurred error: {error}")
         return thesis_pages
 
-    def get_thesis_position(self, pages):
+    def get_thesis_position(self, pages) -> deque[str]:
         """
         This method find all paragraph HTML elements, convert them to strings and select the zero position.
 
@@ -151,7 +150,7 @@ class PucpThesis:
             thesis_positions_list.append(thesis_position)
         return thesis_positions_list
 
-    def get_thesis_count(self, positions):
+    def get_thesis_count(self, positions) -> deque[int]:
         """
         This method loops through the positions parameter and verifies if there is a match with a list of strings.
         If it is true, it removes the item; otherwise, it breaks.
@@ -191,3 +190,7 @@ def get_pucp():
     thesis_count = thesis_url.get_thesis_count(thesis_positions)
 
     module.write_csv(faculties_list, thesis_count, "PUCP_BACHELOR.csv")
+
+
+faculties_pucp = PucpFaculties("https://repositorio.pucp.edu.pe/index/handle/123456789/7312")
+thesis_pucp = PucpThesis("https://repositorio.pucp.edu.pe/index/handle/123456789")
