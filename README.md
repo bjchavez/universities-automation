@@ -23,3 +23,11 @@ initiating academic and social research.
 | Universidad San Antonio Abad del Cusco | UNSAAC | [https://repositorio.unsaac.edu.pe/] |
 | Pontificia Universidad Católica del Perú | PUCP | [https://repositorio.pucp.edu.pe/index/] |
 | Universidad Nacional del Centro del Perú | UNCP | [https://repositorio.uncp.edu.pe/] |
+
+## Folders and files
+
+├── /bachelor_degree        # Contains a list of .py files for Peruvian universities
+├── get_bachelors.py        # Main file with calls to the 'get' methods of universities
+├── README.md               # Readme file
+├── /tests                  # Test folders(incomplete)
+
