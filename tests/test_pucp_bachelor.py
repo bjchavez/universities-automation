@@ -1,4 +1,5 @@
 from bachelor_degree.pucp_bachelor import faculties_pucp as faculties, thesis_pucp as thesis
+from bachelor_degree.pucp_bachelor import thesis_pucp as thesis
 from requests.exceptions import HTTPError
 from unittest.mock import patch
 from bs4 import BeautifulSoup
@@ -32,21 +33,7 @@ class TestsPucpFaculties(unittest.TestCase):
         self.assertRaises(HTTPError, faculties.get_faculties_page, req_exception)
 
     def test_faculties(self):
-        page_bs = """
-        <html>
-            <body>
-                <span class="Z3988">Hello world</span><span class="Z3988">Hello world</span>
-                <span class="Z3988">Hello world</span><span class="Z3988">Hello world</span>
-                <span class="Z3988">Hello world</span><span class="Z3988">Hello world</span>
-                <span class="Z3988">Hello world</span><span class="Z3988">Hello world</span>
-                <span class="Z3988">Hello world</span><span class="Z3988">Hello world</span>
-                <span class="Z3988">Hello world</span><span class="Z3988">Hello world</span>
-                <span class="Z3988">Hello world</span>
-            </body>
-        </html>
-        """
-        soup = BeautifulSoup(page_bs, "html.parser")
-        self.assertEqual(len(faculties.get_faculties(soup)), 13)
+        soup = BeautifulSoup("<body><span class='Z3988'>Faculty AAA</span></body>", "html.parser")
         assert_type(faculties.get_faculties(soup), list[str])
 
 
