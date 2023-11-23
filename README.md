@@ -4,7 +4,7 @@
 
 This repository contains a dataset of digitized and published theses by the main universities of Perú.
 
-## Goal
+## Why?
 
 The data has been extracted from their institutional repositories with the purpose of serving as a reference, supporting, or
 initiating academic and social research.
@@ -26,8 +26,45 @@ initiating academic and social research.
 
 ## Folders and files
 
+```
+
 ├── /bachelor_degree        # Contains a list of .py files for Peruvian universities
 ├── get_bachelors.py        # Main file with calls to the 'get' methods of universities
 ├── README.md               # Readme file
 ├── /tests                  # Test folders(incomplete)
 
+```
+
+## Usage
+
+First, you must update the CSV files, in the project root, run:
+
+```bash
+
+python3 get_bachelors.py
+
+```
+
+Then, in the folder 'bachelor_degree/datasets', you will find all the updated CSV files.
+
+```
+├── PUCP_BACHELOR.csv
+├── UCS_BACHELOR.csv
+├── UCV_BACHELOR.csv
+├── UNALM_BACHELOR.csv
+├── UNI_BACHELOR.csv
+├── UNJFSC_BACHELOR.csv
+├── UNMSM_BACHELOR.csv
+├── UNSAAC_BACHELOR.csv
+├── UNSCH_BACHELOR.csv
+```
+
+## Technologies Used
+
+- Python
+- BeautifulSoup
+- lxml
+
+## Licence
+
+MIT Licence
