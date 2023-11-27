@@ -53,11 +53,13 @@ class TestsPucpThesis(unittest.TestCase):
         ids = thesis_pucp.get_thesis_ids()
         self.assertEqual(ids, self.thesis_ids)
 
-    @patch("requests.get")
-    def test_response(self, mock_responses):
-        mock_responses.return_value = deque([200, 200, 200, 200, 200, 200, 200])
-        responses = thesis_pucp.get_thesis_response()
-        self.assertIsInstance(responses, deque)
+    @patch.object(thesis_pucp, "get_thesis_response")
+    def test_responses(self, mock_responses):
+        mock_responses.return_value = deque([200, 200, 200, 200,
+                                             200, 200, 200, 200,
+                                             200, 200, 200, 200, 200])
+        self.assertEqual(len(thesis_pucp.get_thesis_response()), 13)
+        self.assertIsInstance(thesis_pucp.get_thesis_response(), deque)
 
 
 if __name__ == "__main__":
