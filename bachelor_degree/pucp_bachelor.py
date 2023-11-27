@@ -94,14 +94,14 @@ class PucpThesis:
         """
         return self.thesis_ids
 
-    def get_thesis_response(self) -> deque:
+    def get_thesis_response(self) -> list:
         """
         This method make http requests at thesis URL.
 
         Returns:
-            A deque of http response codes.
+            A list of http response codes.
         """
-        thesis_response = deque()
+        thesis_response = []
         for thesis in self.thesis_ids:
             thesis_req = requests.get(f"{self.thesis_url}/{thesis}/browse?type=dateissued", verify=False)
             thesis_response.append(thesis_req)
