@@ -112,15 +112,15 @@ class PucpThesis:
         This method loops through the deque of HTTP responses and verifies if their status code is 200.
 
         Args:
-            responses[deque]: Http response codes of each thesis page.
+            responses[list]: Http response codes of each thesis page.
 
         Returns:
-            A deque of BeautifulSoup parsed objects.
+            A list of BeautifulSoup parsed objects.
 
         Raises:
             HTTPErrors: If the status code is not 200, the method returns an HTTP error and halts the program.
         """
-        thesis_pages = deque()
+        thesis_pages = []
 
         for response in responses:
             if response.status_code == 200:
