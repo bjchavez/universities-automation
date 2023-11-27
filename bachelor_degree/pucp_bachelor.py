@@ -107,7 +107,7 @@ class PucpThesis:
             thesis_response.append(thesis_req)
         return thesis_response
 
-    def get_thesis_page(self, responses) -> deque[BeautifulSoup]:
+    def get_thesis_page(self, responses):
         """
         This method loops through the deque of HTTP responses and verifies if their status code is 200.
 
@@ -123,13 +123,12 @@ class PucpThesis:
         thesis_pages = deque()
 
         for response in responses:
-            try:
-                if response.status_code == 200:
-                    page = BeautifulSoup(response.text, "html.parser")
-                    thesis_pages.append(page)
-            except requests.exceptions.HTTPError as error:
-                print(f"An ocurred error: {error}")
-        return thesis_pages
+            if response.status_code == 200:
+                page = BeautifulSoup(response.text, "html.parser")
+                thesis_pages.append(page)
+                return thesis_pages
+            else:
+                raise requests.exceptions.HTTPError
 
     def get_thesis_position(self, pages) -> deque[str]:
         """
