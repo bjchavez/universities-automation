@@ -31,7 +31,7 @@ initiating academic and social research.
 ├── /bachelor_degree        # Contains a list of .py files for Peruvian universities
 ├── get_bachelors.py        # Main file with calls to the 'get' methods of universities
 ├── README.md               # Readme file
-├── /tests                  # Test folders(incomplete)
+├── /tests                  # Test folders(test_pucp_bachelor)
 
 ```
 
