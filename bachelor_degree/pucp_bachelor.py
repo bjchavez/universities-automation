@@ -1,6 +1,5 @@
 from importlib import import_module
 from bs4 import BeautifulSoup
-from collections import deque
 import requests
 
 
