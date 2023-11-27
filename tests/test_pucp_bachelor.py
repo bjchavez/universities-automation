@@ -3,7 +3,6 @@ from bachelor_degree.pucp_bachelor import thesis_pucp
 from requests.exceptions import HTTPError
 from unittest.mock import patch
 from bs4 import BeautifulSoup
-from collections import deque
 import unittest
 import requests
 import urllib3
@@ -55,11 +54,11 @@ class TestsPucpThesis(unittest.TestCase):
 
     @patch.object(thesis_pucp, "get_thesis_response")
     def test_responses(self, mock_responses):
-        mock_responses.return_value = deque([200, 200, 200, 200,
-                                             200, 200, 200, 200,
-                                             200, 200, 200, 200, 200])
+        mock_responses.return_value = [200, 200, 200, 200,
+                                       200, 200, 200, 200,
+                                       200, 200, 200, 200, 200]
         self.assertEqual(len(thesis_pucp.get_thesis_response()), 13)
-        self.assertIsInstance(thesis_pucp.get_thesis_response(), deque)
+        self.assertIsInstance(thesis_pucp.get_thesis_response(), list)
 
 
 if __name__ == "__main__":
