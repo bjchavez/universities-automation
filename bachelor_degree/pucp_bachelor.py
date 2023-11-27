@@ -130,17 +130,17 @@ class PucpThesis:
             else:
                 raise requests.exceptions.HTTPError
 
-    def get_thesis_position(self, pages) -> deque[str]:
+    def get_thesis_position(self, pages) -> list[str]:
         """
         This method find all paragraph HTML elements, convert them to strings and select the zero position.
 
         Args:
-            pages[deque]: BeautifulSoup parsed pages.
+            pages[list]: BeautifulSoup parsed pages.
 
         Returns:
-            A deque of paragraph HTML elements.
+            A list of paragraph HTML elements.
         """
-        thesis_positions_list = deque()
+        thesis_positions_list = []
 
         for page in pages:
             thesis_p = page.find_all("p", class_="pagination-info")
@@ -149,18 +149,18 @@ class PucpThesis:
             thesis_positions_list.append(thesis_position)
         return thesis_positions_list
 
-    def get_thesis_count(self, positions) -> deque[int]:
+    def get_thesis_count(self, positions) -> list[int]:
         """
         This method loops through the positions parameter and verifies if there is a match with a list of strings.
         If it is true, it removes the item; otherwise, it breaks.
 
         Args:
-            positions[deque]: Paragraph HTML elements.
+            positions[list]: Paragraph HTML elements.
 
         Returns:
-            A deque with the numbers of the theses.
+            A list with the numbers of the theses.
         """
-        thesis_count_list = deque()
+        thesis_count_list = []
 
         for position in positions:
             options = ["Now showing items 1-20 of ", "Now showing items 1-6 of ", "Now showing items 1-15 of "]
