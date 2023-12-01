@@ -37,7 +37,15 @@ initiating academic and social research.
 
 ## Usage
 
-First, you must update the CSV files, in the project root, run:
+First, install requirements.txt file:
+
+```bash
+
+pip install -r requirements.txt
+
+```
+
+Then, you must update the CSV files, to do this run in the project root:
 
 ```bash
 
@@ -45,7 +53,7 @@ python3 get_bachelors.py
 
 ```
 
-Then, in the folder 'bachelor_degree/datasets', you will find all the updated CSV files.
+After, in the folder 'bachelor_degree/datasets', you will find all the updated CSV files.
 
 ```
 ├── PUCP_BACHELOR.csv
